@@ -1,0 +1,1629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZoxxStore - Top Up & Pembayaran</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4a00e0;
+            --secondary: #8e2de2;
+            --dark: #1a1a2e;
+            --light: #f1f1f1;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #fd7e14;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: var(--dark);
+            line-height: 1.6;
+            padding-top: 100px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        header.hide {
+            transform: translateY(-100%);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: white;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        nav ul li a:hover {
+            opacity: 0.8;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: white;
+            color: var(--primary);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+        }
+
+        .section {
+            padding: 3rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        .category-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .category-tab {
+            padding: 0.75rem 1.5rem;
+            background: white;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .category-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .category-tab:hover:not(.active) {
+            background: #e0e0e0;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+        }
+
+        .product-card-content {
+            padding: 1.5rem;
+        }
+
+        .product-card h3 {
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .product-card p {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .product-price {
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .radio-option {
+            flex: 1 1 calc(33.333% - 1rem);
+            min-width: 120px;
+        }
+
+        .radio-option input {
+            display: none;
+        }
+
+        .radio-option label {
+            display: block;
+            padding: 1rem;
+            background: #f5f5f5;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .radio-option input:checked + label {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* New style for price text in radio options */
+        .radio-option .product-price {
+            font-weight: bold;
+            margin-top: 5px;
+            color: var(--dark);
+        }
+
+        .radio-option input:checked + label .product-price {
+            color: white;
+        }
+
+        .payment-method {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .payment-icon {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        /* Banner Slider Styles */
+        .banner-slider {
+            width: 100%;
+            margin: 2rem 0;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            position: relative;
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+        }
+
+        .banner-slides {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: transform 0.2s ease;
+        }
+
+        .banner-slide {
+            min-width: 100%;
+            height: 100%;
+        }
+
+        .banner-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .banner-nav {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .banner-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .banner-dot.active {
+            background: white;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-top: 90px;
+            }
+
+            .header-content {
+                flex-direction: column;
+            }
+
+            nav ul {
+                margin-top: 1rem;
+            }
+
+            nav ul li {
+                margin-left: 1rem;
+                margin-right: 1rem;
+            }
+
+            .radio-option {
+                flex: 1 1 calc(50% - 1rem);
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding-top: 80px;
+            }
+
+            .radio-option {
+                flex: 1 1 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header id="main-header">
+        <div class="container header-content">
+            <a href="#" class="logo">ZOXSTORE</a>
+            <nav>
+                <ul>
+                    <li><a href="#" id="nav-home">Home</a></li>
+                    <li><a href="#" id="nav-order">Pesanan</a></li>
+                    <li><a href="https://wa.me/6285892971228" target="_blank">Kontak</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Home Section -->
+        <section id="home-section" class="section">
+            <h2 class="section-title">Layanan Top Up & Pembayaran</h2>
+            
+            <!-- Banner Slider -->
+            <div class="banner-slider">
+                <div class="banner-slides">
+                    <div class="banner-slide">
+                        <img src="Ban1.png" alt="Promo Banner 1">
+                    </div>
+                    <div class="banner-slide">
+                        <img src="Ban2.png" alt="Promo Banner 2">
+                    </div>
+                    <div class="banner-slide">
+                        <img src="Ban3.png" alt="Promo Banner 3">
+                    </div>
+                </div>
+                <div class="banner-nav">
+                    <div class="banner-dot active" data-slide="0"></div>
+                    <div class="banner-dot" data-slide="1"></div>
+                    <div class="banner-dot" data-slide="2"></div>
+                </div>
+            </div>
+            
+            <div class="category-tabs">
+                <div class="category-tab active" data-category="game">Game</div>
+                <div class="category-tab" data-category="pulsa">Pulsa</div>
+                <div class="category-tab" data-category="data">Paket Data</div>
+                <div class="category-tab" data-category="emoney">E-Wallet</div>
+            </div>
+            
+            <!-- Game Products -->
+            <div id="game-products" class="products-container">
+                <div class="products-grid">
+                    <!-- Mobile Legends -->
+                    <div class="product-card" data-product="mlbb">
+                        <img src="ML.jpg" alt="Mobile Legends">
+                        <div class="product-card-content">
+                            <h3>Mobile Legends</h3>
+                            <p>Top up Diamond dan Pass</p>
+                            <div class="product-price">Mulai Rp 5.000</div>
+                            <button class="btn btn-primary btn-pilih">Pilih</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Free Fire -->
+                    <div class="product-card" data-product="freefire">
+                        <img src="FreeFire.jpg" alt="Free Fire">
+                        <div class="product-card-content">
+                            <h3>Free Fire</h3>
+                            <p>Top up Diamond dan Pass</p>
+                            <div class="product-price">Mulai Rp 5.000</div>
+                            <button class="btn btn-primary btn-pilih">Pilih</button>
+                        </div>
+                    </div>
+                    
+                    <!-- PUBG Mobile -->
+                    <div class="product-card" data-product="pubg">
+                        <img src="Pubg.jpg" alt="PUBG Mobile">
+                        <div class="product-card-content">
+                            <h3>PUBG Mobile</h3>
+                            <p>Top up UC</p>
+                            <div class="product-price">Mulai Rp 14.000</div>
+                            <button class="btn btn-primary btn-pilih">Pilih</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Call of Duty Mobile -->
+                    <div class="product-card" data-product="codm">
+                        <img src="Codm.jpg" alt="Call of Duty Mobile">
+                        <div class="product-card-content">
+                            <h3>Call of Duty Mobile</h3>
+                            <p>Top up CP</p>
+                            <div class="product-price">Mulai Rp 4.500</div>
+                            <button class="btn btn-primary btn-pilih">Pilih</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Honor Of Kings -->
+                    <div class="product-card" data-product="honor">
+                        <img src="HOK.jpg" alt="Honor Of Kings">
+                        <div class="product-card-content">
+                            <h3>Honor Of Kings</h3>
+                            <p>Top up Tokens</p>
+                            <div class="product-price">Mulai Rp 1.500</div>
+                            <button class="btn btn-primary btn-pilih">Pilih</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Arena of Valorant -->
+                    <div class="product-card" data-product="valorant">
+                        <img src="AOV.jpg" alt="Arena of Valorant">
+                        <div class="product-card-content">
+                            <h3>Arena of Valorant</h3>
+                            <p>Top up Vouchers</p>
+                            <div class="product-price">Mulai Rp 10.000</div>
+                            <button class="btn btn-primary btn-pilih">Pilih</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pulsa Products -->
+            <div id="pulsa-products" class="products-container hidden">
+                <div class="products-grid">
+                    <!-- Telkomsel -->
+                    <div class="product-card" data-product="telkomsel">
+                        <img src="Telkomsel.jpg" alt="Telkomsel">
+                        <div class="product-card-content">
+                            <h3>Telkomsel</h3>
+                            <p>Pulsa Telkomsel</p>
+                            <div class="product-price">Mulai Rp 7.000</div>
+                            <button class="btn btn-primary btn-pilih">Pilih</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Indosat -->
+                    <div class="product-card" data-product="indosat">
+                        <img src="Indosat.jpg" alt="Indosat">
+                        <div class="product-card-content">
+                            <h3>Indosat</h3>
+                            <p>Pulsa Indosat</p>
+                            <div class="product-price">Mulai Rp 7.000</div>
+                            <button class="btn btn-primary btn-pilih">Pilih</button>
+                        </div>
+                    </div>
+                    
+                    <!-- XL -->
+                    <div class="product-card" data-product="xl">
+                        <img src="Xl.jpg" alt="XL">
+                        <div class="product-card-content">
+                            <h3>XL</h3>
+                            <p>Pulsa XL</p>
+                            <div class="product-price">Mulai Rp 7.000</div>
+                            <button class="btn btn-primary btn-pilih">Pilih</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Smartfren -->
+                    <div class="product-card" data-product="smartfren">
+                        <img src="Smartfren.jpg" alt="Smartfren">
+                        <div class="product-card-content">
+                            <h3>Smartfren</h3>
+                            <p>Pulsa Smartfren</p>
+                            <div class="product-price">Mulai Rp 7.000</div>
+                            <button class="btn btn-primary btn-pilih">Pilih</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Axis -->
+                    <div class="product-card" data-product="axis">
+                        <img src="Axis.jpg" alt="Axis">
+                        <div class="product-card-content">
+                            <h3>Axis</h3>
+                            <p>Pulsa Axis</p>
+                            <div class="product-price">Mulai Rp 7.000</div>
+                            <button class="btn btn-primary btn-pilih">Pilih</button>
+                        </div>
+                    </div>
+                    
+                    <!-- by.U -->
+                    <div class="product-card" data-product="byu">
+                        <img src="Byu.jpg" alt="by.U">
+                        <div class="product-card-content">
+                            <h3>by.U</h3>
+                            <p>Pulsa by.U</p>
+                            <div class="product-price">Mulai Rp 7.000</div>
+                            <button class="btn btn-primary btn-pilih">Pilih</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Three -->
+                    <div class="product-card" data-product="three">
+                        <img src="Three.jpg" alt="Three">
+                        <div class="product-card-content">
+                            <h3>Three</h3>
+                            <p>Pulsa Three</p>
+                            <div class="product-price">Mulai Rp 7.000</div>
+                            <button class="btn btn-primary btn-pilih">Pilih</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Paket Data Products -->
+            <div id="data-products" class="products-container hidden">
+                <div class="products-grid">
+                    <div class="product-card" data-product="telkomsel-data">
+                        <img src="Telkomsel16.jpg" alt="Telkomsel">
+                        <div class="product-card-content">
+                            <h3>Telkomsel Data</h3>
+                            <p>Paket data telkomsel</p>
+                            <div class="product-price">Coming Soon</div>
+                            <button class="btn btn-primary btn-pilih">Pilih</button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-product="xl-data">
+                        <img src="Xl.jpg" alt="XL">
+                        <div class="product-card-content">
+                            <h3>XL Data</h3>
+                            <p>Paket data xl</p>
+                            <div class="product-price">Coming Soon</div>
+                            <button class="btn btn-primary btn-pilih">Pilih</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- e-Money Products -->
+            <div id="emoney-products" class="products-container hidden">
+                <div class="products-grid">
+                    <div class="product-card" data-product="dana">
+                        <img src="Dana16.jpg" alt="DANA">
+                        <div class="product-card-content">
+                            <h3>DANA</h3>
+                            <p>Isi saldo DANA</p>
+                            <div class="product-price">Mulai Rp 7.000</div>
+                            <button class="btn btn-primary btn-pilih">Pilih</button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-product="ovo">
+                        <img src="Ovo16.jpg" alt="OVO">
+                        <div class="product-card-content">
+                            <h3>OVO</h3>
+                            <p>Isi saldo OVO</p>
+                            <div class="product-price">Mulai Rp 12.000</div>
+                            <button class="btn btn-primary btn-pilih">Pilih</button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-product="gopay">
+                        <img src="Gopay16.jpg" alt="Gopay">
+                        <div class="product-card-content">
+                            <h3>Gopay</h3>
+                            <p>Isi saldo Gopay</p>
+                            <div class="product-price">Mulai Rp 7.000</div>
+                            <button class="btn btn-primary btn-pilih">Pilih</button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-product="shopeepay">
+                        <img src="Shopeepay16.jpg" alt="ShopeePay">
+                        <div class="product-card-content">
+                            <h3>ShopeePay</h3>
+                            <p>Isi saldo ShopeePay</p>
+                            <div class="product-price">Mulai Rp 12.000</div>
+                            <button class="btn btn-primary btn-pilih">Pilih</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Order Form Section -->
+        <section id="order-section" class="section hidden">
+            <div class="form-container">
+                <h2 id="product-title" class="section-title">Free Fire Diamond</h2>
+                
+                <!-- Formulir untuk Mobile Legends -->
+                <div id="mlbb-form" class="id-fields" style="display: none;">
+                    <div class="form-group">
+                        <label for="mlbb-user-id">ID Pengguna</label>
+                        <input type="text" id="mlbb-user-id" class="form-control" placeholder="Masukkan ID Pengguna" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="mlbb-zone-id">ID Zone</label>
+                        <input type="text" id="mlbb-zone-id" class="form-control" placeholder="Masukkan ID Zone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="mlbb-customer-name">Nama Pelanggan</label>
+                        <input type="text" id="mlbb-customer-name" class="form-control" placeholder="Masukkan nama Anda" required>
+                    </div>
+                </div>
+                
+                <!-- Formulir untuk Free Fire -->
+                <div id="freefire-form" class="id-fields" style="display: none;">
+                    <div class="form-group">
+                        <label for="freefire-game-id">ID Game</label>
+                        <input type="text" id="freefire-game-id" class="form-control" placeholder="Masukkan ID Game" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="freefire-customer-name">Nama Pelanggan</label>
+                        <input type="text" id="freefire-customer-name" class="form-control" placeholder="Masukkan nama Anda" required>
+                    </div>
+                </div>
+                
+                <!-- Formulir untuk game lainnya -->
+                <div id="other-game-form" class="id-fields" style="display: none;">
+                    <div class="form-group">
+                        <label for="game-id">ID Game</label>
+                        <input type="text" id="game-id" class="form-control" placeholder="Masukkan ID Game" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="game-customer-name">Nama Pelanggan</label>
+                        <input type="text" id="game-customer-name" class="form-control" placeholder="Masukkan nama Anda" required>
+                    </div>
+                </div>
+                
+                <!-- Formulir untuk pulsa -->
+                <div id="pulsa-form" class="id-fields" style="display: none;">
+                    <div class="form-group">
+                        <label for="phone-number">Nomor HP</label>
+                        <input type="text" id="phone-number" class="form-control" placeholder="Masukkan Nomor HP" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pulsa-customer-name">Nama Pengguna</label>
+                        <input type="text" id="pulsa-customer-name" class="form-control" placeholder="Masukkan nama Anda" required>
+                    </div>
+                </div>
+                
+                <!-- Formulir untuk e-wallet -->
+                <div id="emoney-form" class="id-fields" style="display: none;">
+                    <div class="form-group">
+                        <label for="emoney-number">Nomor E-Wallet</label>
+                        <input type="text" id="emoney-number" class="form-control" placeholder="Masukkan Nomor E-Wallet" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="emoney-customer-name">Nama Pengguna</label>
+                        <input type="text" id="emoney-customer-name" class="form-control" placeholder="Masukkan nama Anda" required>
+                    </div>
+                </div>
+                
+                <form id="order-form">
+                    <div class="form-group">
+                        <label>Pilih Nominal</label>
+                        <div class="radio-group" id="product-options">
+                            <!-- Diisi oleh JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Metode Pembayaran</label>
+                        <div class="radio-group" id="payment-options">
+                            <div class="radio-option">
+                                <input type="radio" name="payment" id="dana" value="DANA" required>
+                                <label for="dana">
+                                    <div class="payment-method">
+                                        <img src="Dana.png" alt="DANA" class="payment-icon">
+                                        DANA
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" name="payment" id="cash" value="CASH" required>
+                                <label for="cash">
+                                    <div class="payment-method">
+                                        <img src="Cash.png" alt="CASH" class="payment-icon">
+                                        Cash
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" name="payment" id="gopay" value="GOPAY" required>
+                                <label for="gopay">
+                                    <div class="payment-method">
+                                        <img src="Gopay.png" alt="GOPAY" class="payment-icon">
+                                        GOPAY
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Lanjutkan Pembayaran</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Order History Section -->
+        <section id="order-history-section" class="section hidden">
+            <h2 class="section-title">Riwayat Pesanan</h2>
+            <div class="form-container">
+                <p>Untuk melihat riwayat pesanan, silakan hubungi kami via WhatsApp dengan menyebutkan nomor HP atau ID Game yang digunakan saat order.</p>
+                <a href="https://wa.me/6285892971228" class="btn btn-primary" target="_blank">
+                    <i class="fab fa-whatsapp"></i> Hubungi WhatsApp
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 ZoxxStore. All rights reserved.</p>
+            <p>Hubungi kami: <a href="https://wa.me/6285892971228" style="color: white;">WhatsApp</a></p>
+        </div>
+    </footer>
+
+    <script>
+        // Product data
+        const products = {
+            // Game products
+            mlbb: {
+                name: "Mobile Legends Diamond",
+                type: "game",
+                formType: "mlbb",
+                items: [
+                    { name: "Weekly Diamond Pass", amount: "pass", price: 27000 },
+                    { name: "18 Diamond", amount: 18, price: 5000 },
+                    { name: "30 Diamond", amount: 30, price: 8500 },
+                    { name: "36 Diamond", amount: 36, price: 10000 },
+                    { name: "46 Diamond", amount: 46, price: 13000 },
+                    { name: "50 Diamond", amount: 50, price: 14000 },
+                    { name: "56 Diamond", amount: 56, price: 15000 },
+                    { name: "59 Diamond", amount: 59, price: 15500 },
+                    { name: "64 Diamond", amount: 64, price: 17000 },
+                    { name: "74 Diamond", amount: 74, price: 19500 },
+                    { name: "80 Diamond", amount: 80, price: 21500 },
+                    { name: "85 Diamond", amount: 85, price: 22500 },
+                    { name: "100 Diamond", amount: 100, price: 27000 },
+                    { name: "110 Diamond", amount: 110, price: 30000 },
+                    { name: "129 Diamond", amount: 129, price: 34500 },
+                    { name: "148 Diamond", amount: 148, price: 40000 },
+                    { name: "172 Diamond", amount: 172, price: 46000 },
+                    { name: "176 Diamond", amount: 176, price: 48000 },
+                    { name: "222 Diamond", amount: 222, price: 58500 },
+                    { name: "240 Diamond", amount: 240, price: 75000 },
+                    { name: "300 Diamond", amount: 300, price: 80000 },
+                    { name: "344 Diamond", amount: 344, price: 91500 },
+                    { name: "370 Diamond", amount: 370, price: 97500 },
+                    { name: "408 Diamond", amount: 408, price: 107500 },
+                    { name: "429 Diamond", amount: 429, price: 113500 },
+                    { name: "518 Diamond", amount: 518, price: 137000 },
+                    { name: "568 Diamond", amount: 568, price: 150000 },
+                    { name: "600 Diamond", amount: 600, price: 160000 },
+                    { name: "659 Diamond", amount: 659, price: 173000 },
+                    { name: "750 Diamond", amount: 750, price: 195500 },
+                    { name: "878 Diamond", amount: 878, price: 240000 },
+                    { name: "966 Diamond", amount: 966, price: 250000 },
+                    { name: "1045 Diamond", amount: 1045, price: 270000 },
+                    { name: "1050 Diamond", amount: 1050, price: 275000 },
+                    { name: "1136 Diamond", amount: 1136, price: 300000 },
+                    { name: "1358 Diamond", amount: 1358, price: 353000 },
+                    { name: "1412 Diamond", amount: 1412, price: 367000 },
+                    { name: "1506 Diamond", amount: 1506, price: 400000 }
+                ]
+            },
+            freefire: {
+                name: "Free Fire Diamond",
+                type: "game",
+                formType: "freefire",
+                items: [
+                    { name: "Battle Pass Card", amount: "pass", price: 40000 },
+                    { name: "Membership Bulanan", amount: "monthly", price: 79500 },
+                    { name: "Membership Mingguan", amount: "weekly", price: 26500 },
+                    { name: "30 Diamond", amount: 30, price: 5000 },
+                    { name: "75 Diamond", amount: 75, price: 10000 },
+                    { name: "100 Diamond", amount: 100, price: 13000 },
+                    { name: "130 Diamond", amount: 130, price: 17000 },
+                    { name: "140 Diamond", amount: 140, price: 18000 },
+                    { name: "145 Diamond", amount: 145, price: 18500 },
+                    { name: "150 Diamond", amount: 150, price: 20000 },
+                    { name: "170 Diamond", amount: 170, price: 22500 },
+                    { name: "190 Diamond", amount: 190, price: 25000 },
+                    { name: "210 Diamond", amount: 210, price: 27000 },
+                    { name: "280 Diamond", amount: 280, price: 36000 },
+                    { name: "300 Diamond", amount: 300, price: 40000 },
+                    { name: "360 Diamond", amount: 360, price: 45500 },
+                    { name: "375 Diamond", amount: 375, price: 48000 },
+                    { name: "405 Diamond", amount: 405, price: 50500 },
+                    { name: "475 Diamond", amount: 475, price: 60000 },
+                    { name: "500 Diamond", amount: 500, price: 63000 },
+                    { name: "515 Diamond", amount: 515, price: 65000 },
+                    { name: "565 Diamond", amount: 565, price: 70500 },
+                    { name: "600 Diamond", amount: 600, price: 75000 },
+                    { name: "635 Diamond", amount: 635, price: 78500 },
+                    { name: "645 Diamond", amount: 645, price: 82000 },
+                    { name: "655 Diamond", amount: 655, price: 84000 },
+                    { name: "710 Diamond", amount: 710, price: 87500 },
+                    { name: "720 Diamond", amount: 720, price: 88000 },
+                    { name: "740 Diamond", amount: 740, price: 92500 },
+                    { name: "770 Diamond", amount: 770, price: 95000 },
+                    { name: "800 Diamond", amount: 800, price: 100000 },
+                    { name: "860 Diamond", amount: 860, price: 105000 },
+                    { name: "930 Diamond", amount: 930, price: 115000 },
+                    { name: "1000 Diamond", amount: 1000, price: 125000 }
+                ]
+            },
+            pubg: {
+                name: "PUBG Mobile UC",
+                type: "game",
+                formType: "other",
+                items: [
+                    { name: "60 UC", amount: 60, price: 14000 },
+                    { name: "120 UC", amount: 120, price: 28500 },
+                    { name: "180 UC", amount: 180, price: 42500 },
+                    { name: "240 UC", amount: 240, price: 56500 },
+                    { name: "325 UC", amount: 325, price: 71000 },
+                    { name: "385 UC", amount: 385, price: 85000 },
+                    { name: "445 UC", amount: 445, price: 99000 },
+                    { name: "505 UC", amount: 505, price: 113000 },
+                    { name: "565 UC", amount: 565, price: 127000 },
+                    { name: "660 UC", amount: 660, price: 142000 },
+                    { name: "720 UC", amount: 720, price: 156000 },
+                    { name: "780 UC", amount: 780, price: 170000 },
+                    { name: "840 UC", amount: 840, price: 184000 },
+                    { name: "900 UC", amount: 900, price: 198000 },
+                    { name: "985 UC", amount: 985, price: 213000 },
+                    { name: "1105 UC", amount: 1105, price: 241000 }
+                ]
+            },
+            codm: {
+                name: "Call of Duty Mobile CP",
+                type: "game",
+                formType: "other",
+                items: [
+                    { name: "31 CP", amount: 31, price: 4500 },
+                    { name: "63 CP", amount: 63, price: 8700 },
+                    { name: "128 CP", amount: 128, price: 17500 },
+                    { name: "321 CP", amount: 321, price: 43000 },
+                    { name: "645 CP", amount: 645, price: 86000 },
+                    { name: "800 CP", amount: 800, price: 103000 },
+                    { name: "1373 CP", amount: 1373, price: 171500 },
+                    { name: "2060 CP", amount: 2060, price: 257500 },
+                    { name: "2750 CP", amount: 2750, price: 329500 },
+                    { name: "3564 CP", amount: 3564, price: 428500 },
+                    { name: "5618 CP", amount: 5618, price: 625500 },
+                    { name: "7656 CP", amount: 7656, price: 856500 }
+                ]
+            },
+            honor: {
+                name: "Honor Of Kings Tokens",
+                type: "game",
+                formType: "other",
+                items: [
+                    { name: "Weekly Card", amount: "weekly", price: 13000 },
+                    { name: "Weekly Card Plus", amount: "weeklyplus", price: 39500 },
+                    { name: "8 tokens", amount: 8, price: 1500 },
+                    { name: "16 tokens", amount: 16, price: 2500 },
+                    { name: "23 tokens", amount: 23, price: 4000 },
+                    { name: "80 tokens", amount: 80, price: 12000 },
+                    { name: "240 tokens", amount: 240, price: 36000 },
+                    { name: "400 tokens", amount: 400, price: 60000 },
+                    { name: "560 tokens", amount: 560, price: 83500 },
+                    { name: "800 tokens", amount: 800, price: 136500 },
+                    { name: "1200 tokens", amount: 1200, price: 200000 },
+                    { name: "2400 tokens", amount: 2400, price: 409000 },
+                    { name: "4000 tokens", amount: 4000, price: 654000 },
+                    { name: "8000 tokens", amount: 8000, price: 1337000 }
+                ]
+            },
+            valorant: {
+                name: "Arena of Valorant Vouchers",
+                type: "game",
+                formType: "other",
+                items: [
+                    { name: "40 AOV Vouchers", amount: 40, price: 10000 },
+                    { name: "90 AOV Vouchers", amount: 90, price: 19000 },
+                    { name: "230 AOV Vouchers", amount: 230, price: 47500 },
+                    { name: "470 AOV Vouchers", amount: 470, price: 95000 },
+                    { name: "950 AOV Vouchers", amount: 950, price: 190000 },
+                    { name: "1430 AOV Vouchers", amount: 1430, price: 284500 }
+                ]
+            },
+            
+            // Pulsa products
+            telkomsel: {
+                name: "Pulsa Telkomsel",
+                type: "pulsa",
+                formType: "pulsa",
+                items: [
+                    { name: "5.000", amount: 5000, price: 7000 },
+                    { name: "10.000", amount: 10000, price: 12000 },
+                    { name: "15.000", amount: 15000, price: 17000 },
+                    { name: "20.000", amount: 20000, price: 22000 },
+                    { name: "25.000", amount: 25000, price: 27000 },
+                    { name: "30.000", amount: 30000, price: 32000 },
+                    { name: "35.000", amount: 35000, price: 37000 },
+                    { name: "40.000", amount: 40000, price: 42000 },
+                    { name: "45.000", amount: 45000, price: 47000 },
+                    { name: "50.000", amount: 50000, price: 52000 },
+                    { name: "55.000", amount: 55000, price: 57000 },
+                    { name: "60.000", amount: 60000, price: 62000 },
+                    { name: "65.000", amount: 65000, price: 67000 },
+                    { name: "70.000", amount: 70000, price: 72000 },
+                    { name: "75.000", amount: 75000, price: 77000 },
+                    { name: "80.000", amount: 80000, price: 82000 },
+                    { name: "85.000", amount: 85000, price: 87000 },
+                    { name: "90.000", amount: 90000, price: 92000 },
+                    { name: "95.000", amount: 95000, price: 97000 },
+                    { name: "100.000", amount: 100000, price: 102000 }
+                ]
+            },
+            indosat: {
+                name: "Pulsa Indosat",
+                type: "pulsa",
+                formType: "pulsa",
+                items: [
+                    { name: "5.000", amount: 5000, price: 7000 },
+                    { name: "10.000", amount: 10000, price: 12000 },
+                    { name: "12.000", amount: 12000, price: 14000 },
+                    { name: "15.000", amount: 15000, price: 17000 },
+                    { name: "20.000", amount: 20000, price: 22000 },
+                    { name: "25.000", amount: 25000, price: 27000 },
+                    { name: "30.000", amount: 30000, price: 32000 },
+                    { name: "40.000", amount: 40000, price: 42000 },
+                    { name: "50.000", amount: 50000, price: 52000 },
+                    { name: "60.000", amount: 60000, price: 62000 },
+                    { name: "70.000", amount: 70000, price: 72000 },
+                    { name: "80.000", amount: 80000, price: 82000 },
+                    { name: "90.000", amount: 90000, price: 92000 },
+                    { name: "100.000", amount: 100000, price: 102000 }
+                ]
+            },
+            xl: {
+                name: "Pulsa XL",
+                type: "pulsa",
+                formType: "pulsa",
+                items: [
+                    { name: "5.000", amount: 5000, price: 7000 },
+                    { name: "10.000", amount: 10000, price: 12000 },
+                    { name: "15.000", amount: 15000, price: 17000 },
+                    { name: "25.000", amount: 25000, price: 27000 },
+                    { name: "30.000", amount: 30000, price: 32000 },
+                    { name: "50.000", amount: 50000, price: 52000 },
+                    { name: "100.000", amount: 100000, price: 102000 }
+                ]
+            },
+            smartfren: {
+                name: "Pulsa Smartfren",
+                type: "pulsa",
+                formType: "pulsa",
+                items: [
+                    { name: "5.000", amount: 5000, price: 7000 },
+                    { name: "10.000", amount: 10000, price: 12000 },
+                    { name: "15.000", amount: 15000, price: 17000 },
+                    { name: "20.000", amount: 20000, price: 22000 },
+                    { name: "25.000", amount: 25000, price: 27000 },
+                    { name: "30.000", amount: 30000, price: 32000 },
+                    { name: "40.000", amount: 40000, price: 42000 },
+                    { name: "50.000", amount: 50000, price: 52000 },
+                    { name: "60.000", amount: 60000, price: 62000 },
+                    { name: "75.000", amount: 75000, price: 77000 },
+                    { name: "80.000", amount: 80000, price: 84000 },
+                    { name: "100.000", amount: 100000, price: 102000 }
+                ]
+            },
+            axis: {
+                name: "Pulsa Axis",
+                type: "pulsa",
+                formType: "pulsa",
+                items: [
+                    { name: "5.000", amount: 5000, price: 7000 },
+                    { name: "10.000", amount: 10000, price: 12000 },
+                    { name: "15.000", amount: 15000, price: 17000 },
+                    { name: "25.000", amount: 25000, price: 27000 },
+                    { name: "30.000", amount: 30000, price: 32000 },
+                    { name: "50.000", amount: 50000, price: 52000 },
+                    { name: "100.000", amount: 100000, price: 102000 }
+                ]
+            },
+            byu: {
+                name: "Pulsa by.U",
+                type: "pulsa",
+                formType: "pulsa",
+                items: [
+                    { name: "5.000", amount: 5000, price: 7000 },
+                    { name: "10.000", amount: 10000, price: 12000 },
+                    { name: "15.000", amount: 15000, price: 17000 },
+                    { name: "20.000", amount: 20000, price: 22000 },
+                    { name: "25.000", amount: 25000, price: 27000 },
+                    { name: "30.000", amount: 30000, price: 32000 },
+                    { name: "35.000", amount: 35000, price: 37000 },
+                    { name: "40.000", amount: 40000, price: 42000 },
+                    { name: "45.000", amount: 45000, price: 47000 },
+                    { name: "50.000", amount: 50000, price: 52000 },
+                    { name: "55.000", amount: 55000, price: 57000 },
+                    { name: "60.000", amount: 60000, price: 62000 },
+                    { name: "65.000", amount: 65000, price: 67000 },
+                    { name: "70.000", amount: 70000, price: 72000 },
+                    { name: "75.000", amount: 75000, price: 77000 },
+                    { name: "80.000", amount: 80000, price: 82000 },
+                    { name: "85.000", amount: 85000, price: 87000 },
+                    { name: "90.000", amount: 90000, price: 92000 },
+                    { name: "95.000", amount: 95000, price: 97000 },
+                    { name: "100.000", amount: 100000, price: 102000 }
+                ]
+            },
+            three: {
+                name: "Pulsa Three",
+                type: "pulsa",
+                formType: "pulsa",
+                items: [
+                    { name: "5.000", amount: 5000, price: 7000 },
+                    { name: "10.000", amount: 10000, price: 12000 },
+                    { name: "15.000", amount: 15000, price: 17000 },
+                    { name: "20.000", amount: 20000, price: 22000 },
+                    { name: "25.000", amount: 25000, price: 27000 },
+                    { name: "30.000", amount: 30000, price: 32000 },
+                    { name: "40.000", amount: 40000, price: 42000 },
+                    { name: "50.000", amount: 50000, price: 52000 },
+                    { name: "60.000", amount: 60000, price: 62000 },
+                    { name: "70.000", amount: 70000, price: 72000 },
+                    { name: "75.000", amount: 75000, price: 77000 },
+                    { name: "80.000", amount: 80000, price: 82000 },
+                    { name: "90.000", amount: 90000, price: 92000 },
+                    { name: "100.000", amount: 100000, price: 102000 }
+                ]
+            },
+            
+            // Paket Data products
+            "telkomsel-data": {
+                name: "Paket Data Telkomsel",
+                type: "data",
+                formType: "pulsa",
+                items: []
+            },
+            "xl-data": {
+                name: "Paket Data XL",
+                type: "data",
+                formType: "pulsa",
+                items: []
+            },
+            
+            // E-Wallet products
+            dana: {
+                name: "DANA",
+                type: "emoney",
+                formType: "emoney",
+                items: [
+                    { name: "5.000", amount: 5000, price: 7000 },
+                    { name: "10.000", amount: 10000, price: 12000 },
+                    { name: "15.000", amount: 15000, price: 17000 },
+                    { name: "20.000", amount: 20000, price: 22000 },
+                    { name: "25.000", amount: 25000, price: 27000 },
+                    { name: "30.000", amount: 30000, price: 32000 },
+                    { name: "35.000", amount: 35000, price: 37000 },
+                    { name: "40.000", amount: 40000, price: 42000 },
+                    { name: "45.000", amount: 45000, price: 47000 },
+                    { name: "50.000", amount: 50000, price: 52000 },
+                    { name: "55.000", amount: 55000, price: 57500 },
+                    { name: "60.000", amount: 60000, price: 62500 },
+                    { name: "65.000", amount: 65000, price: 67500 },
+                    { name: "70.000", amount: 70000, price: 72500 },
+                    { name: "75.000", amount: 75000, price: 77500 },
+                    { name: "80.000", amount: 80000, price: 82500 },
+                    { name: "85.000", amount: 85000, price: 87500 },
+                    { name: "90.000", amount: 90000, price: 92500 },
+                    { name: "95.000", amount: 95000, price: 97500 },
+                    { name: "100.000", amount: 100000, price: 103000 }
+                ]
+            },
+            ovo: {
+                name: "OVO",
+                type: "emoney",
+                formType: "emoney",
+                items: [
+                    { name: "10.000", amount: 10000, price: 12000 },
+                    { name: "15.000", amount: 15000, price: 17000 },
+                    { name: "20.000", amount: 20000, price: 22000 },
+                    { name: "25.000", amount: 25000, price: 27000 },
+                    { name: "30.000", amount: 30000, price: 32000 },
+                    { name: "35.000", amount: 35000, price: 37000 },
+                    { name: "40.000", amount: 40000, price: 42000 },
+                    { name: "45.000", amount: 45000, price: 47000 },
+                    { name: "50.000", amount: 50000, price: 52000 },
+                    { name: "55.000", amount: 55000, price: 57500 },
+                    { name: "60.000", amount: 60000, price: 62500 },
+                    { name: "65.000", amount: 65000, price: 67500 },
+                    { name: "70.000", amount: 70000, price: 72500 },
+                    { name: "75.000", amount: 75000, price: 77500 },
+                    { name: "80.000", amount: 80000, price: 82500 },
+                    { name: "85.000", amount: 85000, price: 87500 },
+                    { name: "90.000", amount: 90000, price: 92500 },
+                    { name: "95.000", amount: 95000, price: 97500 },
+                    { name: "100.000", amount: 100000, price: 103000 }
+                ]
+            },
+            gopay: {
+                name: "Gopay",
+                type: "emoney",
+                formType: "emoney",
+                items: [
+                    { name: "5.000", amount: 5000, price: 7000 },
+                    { name: "10.000", amount: 10000, price: 12000 },
+                    { name: "15.000", amount: 15000, price: 17000 },
+                    { name: "20.000", amount: 20000, price: 22000 },
+                    { name: "25.000", amount: 25000, price: 27000 },
+                    { name: "30.000", amount: 30000, price: 32000 },
+                    { name: "35.000", amount: 35000, price: 37000 },
+                    { name: "40.000", amount: 40000, price: 42000 },
+                    { name: "45.000", amount: 45000, price: 47000 },
+                    { name: "50.000", amount: 50000, price: 52000 },
+                    { name: "55.000", amount: 55000, price: 57500 },
+                    { name: "60.000", amount: 60000, price: 62500 },
+                    { name: "65.000", amount: 65000, price: 67500 },
+                    { name: "70.000", amount: 70000, price: 72500 },
+                    { name: "75.000", amount: 75000, price: 77500 },
+                    { name: "80.000", amount: 80000, price: 82500 },
+                    { name: "85.000", amount: 85000, price: 87500 },
+                    { name: "90.000", amount: 90000, price: 92500 },
+                    { name: "95.000", amount: 95000, price: 97500 },
+                    { name: "100.000", amount: 100000, price: 103000 }
+                ]
+            },
+            shopeepay: {
+                name: "ShopeePay",
+                type: "emoney",
+                formType: "emoney",
+                items: [
+                    { name: "10.000", amount: 10000, price: 12000 },
+                    { name: "15.000", amount: 15000, price: 17000 },
+                    { name: "20.000", amount: 20000, price: 22000 },
+                    { name: "25.000", amount: 25000, price: 27000 },
+                    { name: "30.000", amount: 30000, price: 32000 },
+                    { name: "35.000", amount: 35000, price: 37000 },
+                    { name: "40.000", amount: 40000, price: 42000 },
+                    { name: "45.000", amount: 45000, price: 47000 },
+                    { name: "50.000", amount: 50000, price: 52000 },
+                    { name: "55.000", amount: 55000, price: 57500 },
+                    { name: "60.000", amount: 60000, price: 62500 },
+                    { name: "65.000", amount: 65000, price: 67500 },
+                    { name: "70.000", amount: 70000, price: 72500 },
+                    { name: "75.000", amount: 75000, price: 77500 },
+                    { name: "80.000", amount: 80000, price: 82500 },
+                    { name: "85.000", amount: 85000, price: 87500 },
+                    { name: "90.000", amount: 90000, price: 92500 },
+                    { name: "95.000", amount: 95000, price: 97500 },
+                    { name: "100.000", amount: 100000, price: 103000 }
+                ]
+            }
+        };
+
+        // DOM elements
+        const homeSection = document.getElementById('home-section');
+        const orderSection = document.getElementById('order-section');
+        const orderHistorySection = document.getElementById('order-history-section');
+        const navHome = document.getElementById('nav-home');
+        const navOrder = document.getElementById('nav-order');
+        const categoryTabs = document.querySelectorAll('.category-tab');
+        const productsContainers = document.querySelectorAll('.products-container');
+        const productTitle = document.getElementById('product-title');
+        const productOptions = document.getElementById('product-options');
+        const orderForm = document.getElementById('order-form');
+        const mainHeader = document.getElementById('main-header');
+        const bannerSlides = document.querySelector('.banner-slides');
+        const bannerDots = document.querySelectorAll('.banner-dot');
+        
+        // Form elements
+        const mlbbForm = document.getElementById('mlbb-form');
+        const freefireForm = document.getElementById('freefire-form');
+        const otherGameForm = document.getElementById('other-game-form');
+        const pulsaForm = document.getElementById('pulsa-form');
+        const emoneyForm = document.getElementById('emoney-form');
+        
+        // Current selected product
+        let currentProduct = null;
+        let currentSlide = 0;
+        let slideInterval;
+        let lastScrollPosition = window.pageYOffset;
+        let isScrollingDown = false;
+        let scrollTimeout;
+
+        // Initialize the page
+        function init() {
+            hideAllForms();
+            showHome();
+            setupBannerSlider();
+            setupScrollHideHeader();
+            setupEventListeners();
+        }
+
+        // Setup banner slider with auto slide and touch support
+        function setupBannerSlider() {
+            let touchStartX = 0;
+            let touchEndX = 0;
+            const slideCount = document.querySelectorAll('.banner-slide').length;
+            
+            // Start auto slide
+            startAutoSlide();
+            
+            // Add click event to dots
+            bannerDots.forEach(dot => {
+                dot.addEventListener('click', function() {
+                    const slideIndex = parseInt(this.dataset.slide);
+                    goToSlide(slideIndex);
+                });
+            });
+            
+            // Touch events for mobile swipe
+            bannerSlides.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+                clearInterval(slideInterval);
+            }, {passive: true});
+            
+            bannerSlides.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+                startAutoSlide();
+            }, {passive: true});
+            
+            function handleSwipe() {
+                const threshold = 50;
+                if (touchEndX < touchStartX - threshold) {
+                    // Swipe left - next slide
+                    nextSlide();
+                } else if (touchEndX > touchStartX + threshold) {
+                    // Swipe right - previous slide
+                    prevSlide();
+                }
+            }
+        }
+
+        function startAutoSlide() {
+            clearInterval(slideInterval);
+            slideInterval = setInterval(() => {
+                nextSlide();
+            }, 5000);
+        }
+
+        function nextSlide() {
+            const slideCount = document.querySelectorAll('.banner-slide').length;
+            currentSlide = (currentSlide + 1) % slideCount;
+            updateSlider();
+        }
+
+        function prevSlide() {
+            const slideCount = document.querySelectorAll('.banner-slide').length;
+            currentSlide = (currentSlide - 1 + slideCount) % slideCount;
+            updateSlider();
+        }
+
+        function goToSlide(slideIndex) {
+            currentSlide = slideIndex;
+            updateSlider();
+            startAutoSlide(); // Reset timer when manually changing slide
+        }
+
+        function updateSlider() {
+            const slideWidth = 100;
+            bannerSlides.style.transform = `translateX(-${currentSlide * slideWidth}%)`;
+            
+            // Update dots
+            bannerDots.forEach((dot, index) => {
+                if (index === currentSlide) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+
+        // Setup header to hide on scroll down and show on scroll up
+        function setupScrollHideHeader() {
+            window.addEventListener('scroll', function() {
+                const currentScrollPosition = window.pageYOffset;
+                
+                // Clear our timeout throughout the scroll
+                clearTimeout(scrollTimeout);
+                
+                // Determine scroll direction
+                if (currentScrollPosition > lastScrollPosition) {
+                    // Scrolling down
+                    isScrollingDown = true;
+                } else {
+                    // Scrolling up
+                    isScrollingDown = false;
+                }
+                
+                // Set a timeout to run after scrolling stops
+                scrollTimeout = setTimeout(function() {
+                    if (isScrollingDown && currentScrollPosition > 100) {
+                        // Hide header when scrolling down past threshold
+                        mainHeader.classList.add('hide');
+                    } else {
+                        // Show header when scrolling up
+                        mainHeader.classList.remove('hide');
+                    }
+                }, 100);
+                
+                lastScrollPosition = currentScrollPosition;
+            });
+        }
+
+        // Setup all event listeners
+        function setupEventListeners() {
+            // Navigation
+            navHome.addEventListener('click', function(e) {
+                e.preventDefault();
+                showHome();
+            });
+            
+            navOrder.addEventListener('click', function(e) {
+                e.preventDefault();
+                showOrderHistory();
+            });
+
+            // Category tabs
+            categoryTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    categoryTabs.forEach(t => t.classList.remove('active'));
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    // Hide all products containers
+                    productsContainers.forEach(container => {
+                        container.classList.add('hidden');
+                    });
+                    
+                    // Show selected category
+                    const category = this.dataset.category;
+                    document.getElementById(`${category}-products`).classList.remove('hidden');
+                });
+            });
+
+            // Product selection
+            document.querySelectorAll('.btn-pilih').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const productCard = this.closest('.product-card');
+                    const productId = productCard.dataset.product;
+                    currentProduct = products[productId];
+                    
+                    // Update product title
+                    productTitle.textContent = currentProduct.name;
+                    
+                    // Show the correct form fields
+                    hideAllForms();
+                    switch(currentProduct.formType) {
+                        case 'mlbb':
+                            document.getElementById('mlbb-form').style.display = 'block';
+                            break;
+                        case 'freefire':
+                            document.getElementById('freefire-form').style.display = 'block';
+                            break;
+                        case 'pulsa':
+                            document.getElementById('pulsa-form').style.display = 'block';
+                            break;
+                        case 'emoney':
+                            document.getElementById('emoney-form').style.display = 'block';
+                            break;
+                        default:
+                            document.getElementById('other-game-form').style.display = 'block';
+                    }
+                    
+                    // Populate product options
+                    productOptions.innerHTML = '';
+                    if (currentProduct.items.length === 0) {
+                        productOptions.innerHTML = '<p>Produk ini belum tersedia. Silakan coba lagi nanti.</p>';
+                    } else {
+                        // Sort items to show non-diamond items first
+                        const sortedItems = [...currentProduct.items].sort((a, b) => {
+                            // Prioritize items with "pass", "weekly", "monthly", "card" in name
+                            const aIsSpecial = a.name.toLowerCase().includes('pass') || 
+                                              a.name.toLowerCase().includes('weekly') || 
+                                              a.name.toLowerCase().includes('monthly') || 
+                                              a.name.toLowerCase().includes('card');
+                            const bIsSpecial = b.name.toLowerCase().includes('pass') || 
+                                              b.name.toLowerCase().includes('weekly') || 
+                                              b.name.toLowerCase().includes('monthly') || 
+                                              b.name.toLowerCase().includes('card');
+                            
+                            if (aIsSpecial && !bIsSpecial) return -1;
+                            if (!aIsSpecial && bIsSpecial) return 1;
+                            return 0;
+                        });
+                        
+                        sortedItems.forEach(item => {
+                            const option = document.createElement('div');
+                            option.className = 'radio-option';
+                            option.innerHTML = `
+                                <input type="radio" name="product-option" id="${item.amount}" value="${item.amount}" required>
+                                <label for="${item.amount}">
+                                    ${item.name}
+                                    <div class="product-price">Rp ${item.price.toLocaleString('id-ID')}</div>
+                                </label>
+                            `;
+                            productOptions.appendChild(option);
+                        });
+                    }
+                    
+                    // Show order section
+                    showOrderSection();
+                });
+            });
+
+            // Order form submission
+            orderForm.addEventListener('submit', function(e) {
+                 e.preventDefault();
+                
+                // Check if product has no items (coming soon)
+                if (currentProduct.items.length === 0) {
+                    alert('Produk ini belum tersedia. Silakan coba lagi nanti.');
+                    return;
+                }
+                
+                // Get form data
+                const formData = new FormData(this);
+                const selectedOption = document.querySelector('input[name="product-option"]:checked');
+                const selectedPayment = document.querySelector('input[name="payment"]:checked');
+                
+                if (!selectedOption || !selectedPayment) {
+                    alert('Silakan pilih nominal dan metode pembayaran');
+                    return;
+                }
+                
+                // Find the selected product item
+                const selectedItem = currentProduct.items.find(item => 
+                    item.amount.toString() === selectedOption.value || 
+                    item.name === selectedOption.labels[0].textContent.trim()
+                );
+                
+                // Get user data based on product type
+                let userData = {};
+                switch(currentProduct.formType) {
+                    case 'mlbb':
+                        userData = {
+                            userId: document.getElementById('mlbb-user-id').value,
+                            zoneId: document.getElementById('mlbb-zone-id').value,
+                            customerName: document.getElementById('mlbb-customer-name').value
+                        };
+                        break;
+                    case 'freefire':
+                        userData = {
+                            gameId: document.getElementById('freefire-game-id').value,
+                            customerName: document.getElementById('freefire-customer-name').value
+                        };
+                        break;
+                    case 'pulsa':
+                        userData = {
+                            phoneNumber: document.getElementById('phone-number').value,
+                            customerName: document.getElementById('pulsa-customer-name').value
+                        };
+                        break;
+                    case 'emoney':
+                        userData = {
+                            emoneyNumber: document.getElementById('emoney-number').value,
+                            customerName: document.getElementById('emoney-customer-name').value
+                        };
+                        break;
+                    default:
+                        userData = {
+                            gameId: document.getElementById('game-id').value,
+                            customerName: document.getElementById('game-customer-name').value
+                        };
+                }
+                
+                // Prepare WhatsApp message with clean formatting
+                let whatsappMessage = `Halo Admin ZoxxStore,\n\n`;
+    whatsappMessage += `Saya ingin memesan produk berikut:\n\n`;
+    whatsappMessage += `📌 *Detail Produk*\n`;
+    
+    // Ambil hanya nama produk tanpa harga
+    const productName = selectedOption.labels[0].textContent.trim()
+                         .replace(/Rp\s*\d+[\.,]\d+/g, '') // Hapus format harga apapun
+                         .trim();
+    
+    whatsappMessage += `▸ Produk: ${currentProduct.name}\n`;
+    whatsappMessage += `▸ Nominal: ${productName}\n`; // Sekarang hanya menampilkan nama tanpa harga
+    whatsappMessage += `▸ Harga: Rp ${selectedItem.price.toLocaleString('id-ID')}\n`;
+    whatsappMessage += `▸ Metode Pembayaran: ${selectedPayment.labels[0].textContent.trim()}\n\n`;
+                
+                // Add user data based on product type
+                whatsappMessage += `📌 *Data Pelanggan*\n`;
+                switch(currentProduct.formType) {
+                    case 'mlbb':
+                        whatsappMessage += `▸ ID Pengguna: ${userData.userId}\n`;
+                        whatsappMessage += `▸ ID Zone: ${userData.zoneId}\n`;
+                        whatsappMessage += `▸ Nama: ${userData.customerName}\n`;
+                        break;
+                    case 'freefire':
+                        whatsappMessage += `▸ ID Game: ${userData.gameId}\n`;
+                        whatsappMessage += `▸ Nama: ${userData.customerName}\n`;
+                        break;
+                    case 'pulsa':
+                        whatsappMessage += `▸ Nomor HP: ${userData.phoneNumber}\n`;
+                        whatsappMessage += `▸ Nama: ${userData.customerName}\n`;
+                        break;
+                    case 'emoney':
+                        whatsappMessage += `▸ Nomor E-Wallet: ${userData.emoneyNumber}\n`;
+                        whatsappMessage += `▸ Nama: ${userData.customerName}\n`;
+                        break;
+                    default:
+                        whatsappMessage += `▸ ID Game: ${userData.gameId}\n`;
+                        whatsappMessage += `▸ Nama: ${userData.customerName}\n`;
+                }
+                
+                whatsappMessage += `\nMohon konfirmasi ketersediaan dan proses pembayarannya. Terima kasih.`;
+                
+                // Encode message for WhatsApp URL
+                const encodedMessage = encodeURIComponent(whatsappMessage);
+    const whatsappUrl = `https://wa.me/6285892971228?text=${encodedMessage}`;
+    window.open(whatsappUrl, '_blank');
+                
+                // Open WhatsApp
+                window.open(whatsappUrl, '_blank');
+                
+                // Reset form
+                this.reset();
+                 showHome();
+                 });
+        }
+
+        // Helper functions
+        function hideAllForms() {
+            const forms = document.querySelectorAll('.id-fields');
+            forms.forEach(form => form.style.display = 'none');
+        }
+
+        function showHome() {
+            homeSection.classList.remove('hidden');
+            orderSection.classList.add('hidden');
+            orderHistorySection.classList.add('hidden');
+            // Reset scroll position
+            window.scrollTo(0, 0);
+        }
+
+        function showOrderSection() {
+            homeSection.classList.add('hidden');
+            orderSection.classList.remove('hidden');
+            orderHistorySection.classList.add('hidden');
+            // Reset scroll position
+            window.scrollTo(0, 0);
+        }
+
+        function showOrderHistory() {
+            homeSection.classList.add('hidden');
+            orderSection.classList.add('hidden');
+            orderHistorySection.classList.remove('hidden');
+            // Reset scroll position
+            window.scrollTo(0, 0);
+        }
+
+        // Initialize the page when loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
